@@ -1,0 +1,6 @@
+{
+  "name": "Developer Portfolio Hero",
+  "description": "A high-end personal portfolio featuring a seamless dark-theme hero section, customizable typography, and live layout manager.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
