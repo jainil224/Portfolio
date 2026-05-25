@@ -218,30 +218,32 @@ export default function HeroSection({
         <div className="absolute inset-0 z-0 pointer-events-none">
           {userImage ? (
             <div className="relative w-full h-full">
-              {/* Base portrait layer (BG_IMAGE_1) */}
+              {/* Base portrait layer (BG_IMAGE_2 - Spider-Man face) */}
               <img
-                src={userImage}
-                alt={content.name}
-                className="absolute inset-0 w-full h-full object-cover select-none object-center md:object-[center_35%] brightness-110 contrast-[105%]"
+                src={BG_IMAGE_2}
+                alt="Spider-Man Face"
+                className="absolute top-[120px] bottom-0 left-0 right-0 w-full h-[calc(100%-120px)] object-cover select-none brightness-110 contrast-[105%]"
+                style={{ objectPosition: "center 48%" }}
                 referrerPolicy="no-referrer"
                 id="rendered-hero-image"
               />
 
-              {/* Reveal layer (BG_IMAGE_2) showing only within custom spotlight mask */}
+              {/* Reveal layer (userImage - Person) showing only within custom spotlight mask */}
               {maskUrl && (
                 <img
-                  src={BG_IMAGE_2}
-                  alt="Reveal Highlight Layer"
-                  className="absolute inset-0 w-full h-full object-cover select-none object-center md:object-[center_35%] brightness-110 contrast-[105%]"
+                  src={userImage}
+                  alt={content.name}
+                  className="absolute top-[120px] bottom-0 left-0 right-0 w-full h-[calc(100%-120px)] object-cover select-none brightness-110 contrast-[105%]"
                   style={{
+                    objectPosition: "center 48%",
                     WebkitMaskImage: `url(${maskUrl})`,
                     maskImage: `url(${maskUrl})`,
-                    WebkitMaskSize: "100% 100%",
-                    maskSize: "100% 100%",
+                    WebkitMaskSize: "100vw 100vh",
+                    maskSize: "100vw 100vh",
+                    WebkitMaskPosition: "0px -120px",
+                    maskPosition: "0px -120px",
                     WebkitMaskRepeat: "no-repeat",
                     maskRepeat: "no-repeat",
-                    WebkitMaskPosition: "center",
-                    maskPosition: "center",
                   }}
                   referrerPolicy="no-referrer"
                 />
@@ -249,7 +251,7 @@ export default function HeroSection({
               
               {/* Global bottom/top subtle dark vignette helper only for seamless margins with header/footer - keeping center 100% clear */}
               <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-black/50 to-transparent z-1 pointer-events-none" />
-              <div className="absolute inset-x-0 top-0 h-20 bg-gradient-to-b from-black/40 to-transparent z-1 pointer-events-none" />
+              <div className="absolute inset-x-0 top-[120px] h-24 bg-gradient-to-b from-black to-transparent z-10 pointer-events-none" />
             </div>
           ) : (
             /* High-End Tech Placeholder when image not uploaded */
