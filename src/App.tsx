@@ -113,7 +113,7 @@ export default function App() {
   };
 
   return (
-    <div className="relative min-h-screen bg-black text-zinc-100 overflow-x-hidden">
+    <div className="relative min-h-screen bg-black text-zinc-100 overflow-x-clip">
       {/* Informative banner for first-time use to help guide upload */}
       {!userImage && (
         <div className="bg-zinc-900 border-b border-zinc-800 text-center py-2 px-4 flex items-center justify-center gap-2 text-xs text-zinc-300">

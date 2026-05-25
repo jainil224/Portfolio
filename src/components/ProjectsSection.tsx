@@ -1,10 +1,12 @@
 import React, { useRef } from "react";
-import { useScroll, useTransform, motion } from "motion/react";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { FadeIn, LiveProjectButton } from "./Reusable";
 
 interface ProjectItem {
   num: string;
+  number: string;
   name: string;
+  title: string;
   category: string;
   liveUrl: string;
   col1_img1: string;
@@ -15,7 +17,9 @@ interface ProjectItem {
 const PROJECTS_DATA: ProjectItem[] = [
   {
     num: "01",
+    number: "01",
     name: "Nextlevel Studio",
+    title: "Nextlevel Studio",
     category: "Client",
     liveUrl: "#",
     col1_img1: "https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20260412_055344_5eff02e0-87a5-41ce-b64f-eb08da8f33db.png&w=1280&q=85",
@@ -24,7 +28,9 @@ const PROJECTS_DATA: ProjectItem[] = [
   },
   {
     num: "02",
+    number: "02",
     name: "Aura Brand Identity",
+    title: "Aura Brand Identity",
     category: "Personal",
     liveUrl: "#",
     col1_img1: "https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20260412_055654_911201c5-36d9-4bc6-bac7-331adfce159f.png&w=1280&q=85",
@@ -33,7 +39,9 @@ const PROJECTS_DATA: ProjectItem[] = [
   },
   {
     num: "03",
+    number: "03",
     name: "Solaris Digital",
+    title: "Solaris Digital",
     category: "Client",
     liveUrl: "#",
     col1_img1: "https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20260412_055759_963cfb0b-4bd1-4b0f-9d0a-09bd6cf95b2f.png&w=1280&q=85",
@@ -43,108 +51,89 @@ const PROJECTS_DATA: ProjectItem[] = [
 ];
 
 export const ProjectsSection: React.FC = () => {
-  const containerRef = useRef<HTMLDivElement>(null);
-
-  // Track scroll of parent container containing all sticky cards
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start start", "end end"]
-  });
-
   return (
-    <section
-      ref={containerRef}
-      className="bg-[#0C0C0C] text-white rounded-t-[40px] sm:rounded-t-[50px] md:rounded-t-[60px] -mt-10 sm:-mt-12 md:-mt-14 pb-20 relative z-10"
-      id="projects-section"
-    >
-      <div className="max-w-7xl mx-auto px-5 sm:px-8 md:px-10 py-20">
+    <section className="bg-[#0C0C0C] rounded-t-[60px] -mt-14 relative z-10 py-20" id="projects-section">
+      <div className="max-w-7xl mx-auto px-5 md:px-10">
         
-        {/* Projects Heading */}
-        <FadeIn delay={0} y={30} as="div" className="text-center mb-16 sm:mb-24">
-          <h2 className="hero-heading font-black uppercase leading-none tracking-tight inline-block" style={{ fontSize: "clamp(3rem, 12vw, 160px)" }}>
-            Project
-          </h2>
-        </FadeIn>
+        {/* Heading using singular "Project" and the exact styling */}
+        <h2 className="hero-heading text-center font-black uppercase text-[12vw] mb-20">
+          Project
+        </h2>
 
-        {/* Sticky Cards Stacking Deck */}
-        <div className="flex flex-col gap-12 relative">
-          {PROJECTS_DATA.map((project, index) => {
-            return (
-              <StickyCard
-                key={project.num}
-                index={index}
-                project={project}
-                scrollYProgress={scrollYProgress}
-                totalCards={PROJECTS_DATA.length}
-              />
-            );
-          })}
+        <div className="flex flex-col gap-20">
+          {PROJECTS_DATA.map((project, index) => (
+            <ProjectCard
+              key={project.number}
+              index={index}
+              totalCards={PROJECTS_DATA.length}
+              project={project}
+            />
+          ))}
         </div>
-
       </div>
     </section>
   );
 };
 
-interface StickyCardProps {
-  index: number;
+interface ProjectCardProps {
   project: ProjectItem;
-  scrollYProgress: any;
+  index: number;
   totalCards: number;
 }
 
-const StickyCard: React.FC<StickyCardProps> = ({
-  index,
+function ProjectCard({
   project,
-  scrollYProgress,
-  totalCards
-}) => {
-  const cardRef = useRef<HTMLDivElement>(null);
+  index,
+  totalCards,
+}: ProjectCardProps) {
+  const container = useRef<HTMLDivElement>(null);
 
-  // Compute scale based on card index & scroll progress
+  // EXACT SCROLL TRACKING FROM SNIPPET
+  const { scrollYProgress } = useScroll({
+    target: container,
+    offset: ['start end', 'end start'],
+  });
+
+  // EXACT SCALE CALCULATION
   const targetScale = 1 - (totalCards - 1 - index) * 0.03;
-  
-  // Set bounds: start scaling down only as future cards scroll in
-  const startBound = index * (1 / totalCards);
-  const endBound = (index + 1) * (1 / totalCards);
-  
-  // Scale transformation applied symmetrically
-  const scale = useTransform(scrollYProgress, [startBound, endBound], [1, targetScale]);
+
+  // EXACT SCALE TRANSFORMATION
+  const scale = useTransform(
+    scrollYProgress,
+    [0, 1],
+    [1, targetScale]
+  );
 
   return (
     <div
-      ref={cardRef}
-      className="sticky h-[85vh] w-full flex items-start justify-center"
+      ref={container}
+      className="relative h-[95vh] w-full"
       style={{
-        top: `${96 + index * 28}px`,
+        top: `${index * 28}px`,
       }}
     >
+      {/* STICKY SCROLL CARD WITH EXACT STYLING */}
       <motion.div
-        style={{
-          scale,
-        }}
-        className="w-full h-full rounded-[40px] sm:rounded-[50px] md:rounded-[60px] border-2 border-[#D7E2EA] bg-[#0C0C0C] p-4 sm:p-6 md:p-8 flex flex-col justify-between overflow-hidden shadow-2xl relative"
+        style={{ scale }}
+        className="sticky top-24 md:top-32 rounded-[60px] border-2 border-[#D7E2EA] bg-[#0C0C0C] p-6 md:p-8 flex flex-col justify-between"
       >
-        {/* Card Top Row Header */}
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 w-full border-b border-[#D7E2EA]/10 pb-4 md:pb-6">
-          <div className="flex items-center gap-4 sm:gap-6">
-            {/* Project Number */}
-            <span className="font-sans font-black text-transparent bg-clip-text bg-gradient-to-b from-[#D7E2EA] to-[#D7E2EA]/30 text-3xl sm:text-4xl md:text-5xl tracking-tighter uppercase leading-none select-none">
-              {project.num}
-            </span>
-            
-            {/* Title & Badge Stack */}
-            <div className="flex flex-col">
-              <span className="text-[10px] sm:text-xs font-mono uppercase tracking-widest text-zinc-500">
-                {project.category}
-              </span>
-              <h3 className="text-lg sm:text-xl md:text-2xl font-bold font-display text-white tracking-tight">
-                {project.name}
-              </h3>
-            </div>
+        {/* TOP ROW HEADER */}
+        <div className="flex items-center justify-between mb-8 md:mb-10 pb-4 md:pb-6 border-b border-[#D7E2EA]/10">
+          <div>
+            <h3 className="text-white text-4xl md:text-6xl font-black">
+              {project.number}
+            </h3>
+
+            <p className="text-[#D7E2EA] uppercase tracking-widest mt-2 text-xs md:text-sm">
+              {project.category}
+            </p>
+
+            <h4 className="text-white text-2xl md:text-4xl font-bold mt-3">
+              {project.title}
+            </h4>
           </div>
 
-          {/* Reusable Ghost outline button */}
+          {/* Outlined "Live Project" pill button */}
           <LiveProjectButton
             label="Live Project"
             onClick={() => {
@@ -155,49 +144,49 @@ const StickyCard: React.FC<StickyCardProps> = ({
           />
         </div>
 
-        {/* Card Bottom Row: Two-column Image Grid */}
-        <div className="flex-1 grid grid-cols-1 md:grid-cols-10 gap-4 sm:gap-6 pt-4 sm:pt-6 overflow-hidden">
-          
-          {/* Column 1: Left 40% width (Cols 1-4) - 2 stacked images */}
-          <div className="md:col-span-4 flex flex-col gap-4 justify-between h-full overflow-hidden">
+        {/* TWO COLUMN IMAGE GRID */}
+        <div className="grid grid-cols-1 md:grid-cols-[40%_60%] gap-4 md:gap-6">
+          {/* LEFT COLUMN: 40% width */}
+          <div className="flex flex-col gap-4 md:gap-6">
             <div 
-              className="w-full overflow-hidden rounded-[30px] sm:rounded-[40px] md:rounded-[45px] border border-[#D7E2EA]/10 relative bg-zinc-950"
+              className="w-full overflow-hidden rounded-[40px] sm:rounded-[50px] border border-[#D7E2EA]/10 relative bg-zinc-950"
               style={{ height: "clamp(130px, 16vw, 230px)" }}
             >
               <img
                 src={project.col1_img1}
-                alt={`${project.name} Asset 1`}
+                alt=""
                 className="w-full h-full object-cover"
                 referrerPolicy="no-referrer"
               />
             </div>
 
             <div 
-              className="w-full overflow-hidden rounded-[30px] sm:rounded-[40px] md:rounded-[45px] border border-[#D7E2EA]/10 relative bg-zinc-950 flex-1"
+              className="w-full overflow-hidden rounded-[40px] sm:rounded-[50px] border border-[#D7E2EA]/10 relative bg-zinc-950"
               style={{ height: "clamp(160px, 22vw, 340px)" }}
             >
               <img
                 src={project.col1_img2}
-                alt={`${project.name} Asset 2`}
+                alt=""
                 className="w-full h-full object-cover"
                 referrerPolicy="no-referrer"
               />
             </div>
           </div>
 
-          {/* Column 2: Right 60% width (Cols 5-10) - 1 tall image */}
-          <div className="md:col-span-6 w-full h-full overflow-hidden rounded-[30px] sm:rounded-[40px] md:rounded-[50px] border border-[#D7E2EA]/10 relative bg-zinc-950">
+          {/* RIGHT COLUMN: 60% width */}
+          <div className="w-full overflow-hidden rounded-[40px] sm:rounded-[50px] border border-[#D7E2EA]/10 relative bg-zinc-950">
             <img
               src={project.col2_img}
-              alt={`${project.name} Main Showcase`}
+              alt=""
               className="w-full h-full object-cover hover:scale-102 transition-transform duration-700"
               referrerPolicy="no-referrer"
             />
           </div>
-
         </div>
 
       </motion.div>
     </div>
   );
-};
+}
+
+export default ProjectsSection;

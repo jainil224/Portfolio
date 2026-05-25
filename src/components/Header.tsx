@@ -106,15 +106,6 @@ export const Header: React.FC<HeaderProps> = ({ onOpenEditor, onContactClick }) 
           {/* Action Call-To-Action Button with liquid-glass-strong weight */}
           <div className="flex items-center gap-2">
             
-            {/* Configure Toggle icon button */}
-            <button
-              onClick={onOpenEditor}
-              title="Configure Profile"
-              className="p-2 text-zinc-400 hover:text-white hover:bg-white/5 rounded-full transition-all cursor-pointer"
-            >
-              <Settings size={15} />
-            </button>
-
             {/* Custom Interactive Magnet CTA button reminiscent of the photo */}
             <button
               onClick={onContactClick}
