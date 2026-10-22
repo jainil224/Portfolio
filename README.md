@@ -16,7 +16,7 @@ A premium, interactive personal portfolio website featuring a seamless dark-them
 1. Install dependencies:
    ```bash
    npm install
-   ```
+   ```---
 2. Run the application:
    ```bash
    npm run dev
